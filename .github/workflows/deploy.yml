@@ -1,0 +1,38 @@
+name: Test and deploy via FTPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webhotel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test geometry and JavaScript syntax
+        run: |
+          node --test
+          node --check app.js
+          node --check server.js
+      - name: Upload application over explicit FTPS
+        env:
+          FTPS_HOST: ${{ secrets.FTPS_HOST }}
+          FTPS_PORT: ${{ secrets.FTPS_PORT }}
+          FTPS_USER: ${{ secrets.FTPS_USER }}
+          FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
+          FTPS_REMOTE_DIR: ${{ secrets.FTPS_REMOTE_DIR }}
+        run: python3 scripts/deploy.py
