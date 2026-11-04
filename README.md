@@ -1,4 +1,4 @@
-# Kokeile mihin Oulun keskusta mahtuu
+# Kokeile, mihin Oulun keskusta mahtuu
 
 Leaflet- ja JavaScript-sovellus, jossa Oulun keskustan likimääräinen rajaus pysyy kartan keskellä. Siirrä karttaa vertaillaksesi keskustan kokoa muualla.
 
