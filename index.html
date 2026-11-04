@@ -4,35 +4,46 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#faf9f6">
-    <meta name="description" content="Vie Oulun keskusta toisen kaupungin päälle. Vertaile kokoa kartalla todellisessa mittakaavassa.">
-    <title>Oulu muualla — keskustan koko kartalla</title>
+    <meta name="description" content="Liikuta karttaa, ota Oulun keskusta mukaasi. Kokeile mihin Oulun keskusta mahtuu.">
+    <title>Kokeile mihin Oulun keskusta mahtuu</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
     <script src="app.js" type="module"></script>
   </head>
   <body>
-    <header class="header">
-      <a class="brand" href="./" aria-label="Oulu muualla, etusivu"><span class="brand-symbol" aria-hidden="true">o.</span><span>Oulu <em>muualla</em></span></a>
-      <span class="header-note">Yksi keskusta. Monta näkökulmaa.</span>
-      <button id="about-button" class="text-button" aria-haspopup="dialog">Miten tämä toimii? <span aria-hidden="true">↗</span></button>
-    </header>
     <main>
-      <section class="intro" aria-labelledby="title">
-        <div><p class="eyebrow">KAUPUNKIEN KOKO VERTAILUSSA</p><h1 id="title">Entä jos Oulu olisi <em>täällä?</em></h1><p class="description">Siirrä karttaa ja sovita Oulun keskusta uuteen maisemaan.</p></div>
-        <div class="area-stat"><span id="area-value">—</span><span>km² Oulun keskustaa<small>Suuntaa-antava rajaus</small></span></div>
-      </section>
       <section class="map-shell" aria-label="Interaktiivinen kokovertailu kartalla">
         <div id="map" aria-label="Vertailukartta. Siirrä karttaa nuolinäppäimillä tai vetämällä. Zoomaa plus- ja miinusnäppäimillä."></div>
         <svg id="outline" aria-hidden="true"><polygon id="city-polygon"></polygon></svg>
-        <div class="city-picker" role="group" aria-label="Siirry kaupunkiin"><span>VIE OULU</span><button data-city="oulu" aria-pressed="true">Ouluun</button><button data-city="helsinki" aria-pressed="false">Helsinkiin</button><button data-city="tampere" aria-pressed="false">Tampereelle</button><button data-city="turku" aria-pressed="false">Turkuun</button></div>
+        <div class="map-heading">
+          <header class="intro">
+            <h1 id="title">Kokeile mihin Oulun keskusta mahtuu</h1>
+            <p class="description">Liikuta karttaa, ota Oulun keskusta mukaasi</p>
+          </header>
+          <div class="city-picker" role="group" aria-label="Siirry kaupunkiin">
+            <span>Vie Oulu</span>
+            <button data-city="oulu" aria-pressed="true">Ouluun</button>
+            <button data-city="helsinki" aria-pressed="false">Helsinkiin</button>
+            <button data-city="tampere" aria-pressed="false">Tampereelle</button>
+            <button data-city="turku" aria-pressed="false">Turkuun</button>
+            <button data-city="jyvaskyla" aria-pressed="false">Jyväskylään</button>
+            <button data-city="lahti" aria-pressed="false">Lahteen</button>
+            <button data-city="lappeenranta" aria-pressed="false">Lappeenrantaan</button>
+          </div>
+        </div>
         <div class="center-label" aria-hidden="true"><span class="crosshair">+</span><span class="polygon-label">OULUN KESKUSTA</span></div>
         <div id="map-status" class="map-status" role="status" hidden></div>
-        <div class="map-hint"><span aria-hidden="true">↔</span> Liikuta karttaa. Oulu pysyy keskellä.</div>
+        <button id="about-button" class="definition-button" aria-haspopup="dialog" aria-controls="about-dialog">Oulun keskustan määritelmä <span aria-hidden="true">↗</span></button>
         <div class="location"><span class="live-dot" aria-hidden="true"></span><span id="coordinates">65.01° N · 25.47° E</span></div>
       </section>
-      <footer><span><i class="legend-swatch"></i> Oulun keskustan likimääräinen rajaus</span><span>Sama koko metreissä, missä tahansa.</span></footer>
     </main>
-    <dialog id="about-dialog"><button id="close-about" class="close-button" aria-label="Sulje">×</button><p class="eyebrow">PIENI MITTAKAAVAKOE</p><h2>Oulu matkustaa mukana.</h2><p>Vedä karttaa tai valitse kaupunki. Oranssi alue pysyy kartan keskellä. Kun zoomaat kauemmas, alue pienenee ruudulla, mutta sen koko metreissä säilyy.</p><p>Rajaus on käsin tehty, suuntaa-antava esimerkki Oulun ydinkeskustasta. Se ei ole virallinen kaupunginosaraja. Rajaus löytyy tiedostosta <code>geometry.js</code>.</p><p>Sijainti lasketaan jokaisen kärkipisteen etäisyydestä ja suunnasta alueen keskipisteeseen. Näin myös karttaprojektion leveysasteesta riippuva mittakaava tulee huomioiduksi. Pienellä keskusta-alueella pallomallin tarkkuus riittää havainnolliseen vertailuun.</p><a href="https://leafletjs.com/" target="_blank" rel="noreferrer">Toteutettu Leafletillä ↗</a></dialog>
+    <dialog id="about-dialog" aria-labelledby="definition-title">
+      <button id="close-about" class="close-button" aria-label="Sulje">×</button>
+      <h2 id="definition-title">Oulun keskustan määritelmä</h2>
+      <p>Kartalla esitetty alue on näkemyksellinen rajaus Oulun keskustasta. Rajauksen lähtökohtana on alue, joka koostuu pääasiassa umpikortteleista ja jonka katutasossa on kivijalkaliikkeitä.</p>
+      <p>Rajauksen ulkopuolelle on tarkoituksella jätetty Meritulli, Vänmanninsaari ja Etu-Lyötty sekä suuri osa Heinäpäänä tunnetusta epävirallisesta kaupunginosasta.</p>
+      <p>Kyseessä ei ole virallinen kaupunginosa- tai keskustarajaus.</p>
+    </dialog>
   </body>
 </html>

@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { ORIGIN, OULU_BOUNDARY, OFFSETS, polygonAt, distanceAndBearing, sphericalArea } from './geometry.js';
+
+test('outline matches the user GeoJSON with coordinates in Leaflet order', () => {
+  const geojson = JSON.parse(readFileSync(new URL('./oulun_keskusta2.geojson', import.meta.url), 'utf8'));
+  const ring = geojson.features[0].geometry.coordinates[0];
+  assert.deepEqual(ring[0], ring.at(-1));
+  assert.deepEqual(OULU_BOUNDARY, ring.slice(0, -1).map(([lng, lat]) => [lat, lng]));
+});
 
 test('original outline is reconstructed to sub-millimeter precision', () => {
   polygonAt(ORIGIN).forEach((point, i) => assert.ok(distanceAndBearing(point, OULU_BOUNDARY[i]).distance < 0.001));

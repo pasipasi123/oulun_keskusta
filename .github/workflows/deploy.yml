@@ -1,4 +1,4 @@
-name: Test and deploy via FTPS
+name: Test and deploy to GitHub Pages
 
 on:
   push:
@@ -9,15 +9,22 @@ permissions:
   contents: read
 
 concurrency:
-  group: webhotel-production
+  group: github-pages
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -28,11 +35,16 @@ jobs:
           node --test
           node --check app.js
           node --check server.js
-      - name: Upload application over explicit FTPS
-        env:
-          FTPS_HOST: ${{ secrets.FTPS_HOST }}
-          FTPS_PORT: ${{ secrets.FTPS_PORT }}
-          FTPS_USER: ${{ secrets.FTPS_USER }}
-          FTPS_PASSWORD: ${{ secrets.FTPS_PASSWORD }}
-          FTPS_REMOTE_DIR: ${{ secrets.FTPS_REMOTE_DIR }}
-        run: python3 scripts/deploy.py
+      - name: Prepare public files
+        run: |
+          mkdir _site
+          cp index.html app.js geometry.js styles.css _site/
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Upload public files
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

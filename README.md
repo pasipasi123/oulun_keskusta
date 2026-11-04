@@ -1,4 +1,4 @@
-# Oulu muualla
+# Kokeile mihin Oulun keskusta mahtuu
 
 Leaflet- ja JavaScript-sovellus, jossa Oulun keskustan likimääräinen rajaus pysyy kartan keskellä. Siirrä karttaa vertaillaksesi keskustan kokoa muualla.
 
@@ -18,14 +18,17 @@ Vaihtoehtoisesti ilman npm:ää: `node server.js` ja `node --test`.
 
 - Vedä karttaa tai käytä nuolinäppäimiä kartan ollessa kohdistettuna.
 - Zoomaa hiiren rullalla, kosketuseleellä tai plus- ja miinuspainikkeilla.
-- Kaupunkipainikkeet siirtävät Ouluun, Helsinkiin, Tampereelle ja Turkuun.
+- Kartta täyttää koko näytön. Kaupunkipainikkeet siirtävät Ouluun, Helsinkiin, Tampereelle, Turkuun, Jyväskylään, Lahteen ja Lappeenrantaan.
+- Oulun keskustan määritelmä -painike avaa rajauksen perustelut.
 - Polygonin ankkurina on alueen pinta-alan keskipiste. SVG piirretään kartan päälle ja päivitetään jokaisella siirto-, zoomaus- ja kokomuutostapahtumalla.
 - Kärkien etäisyydet ja ilmansuunnat keskipisteestä säilytetään pallogeometrian avulla. Pelkkä leveys- ja pituusasteiden siirtäminen vääristäisi kokoa eri leveysasteilla.
 - Maantieteellinen koko säilyy ja ruudulla näkyvä koko muuttuu zoomauksen sekä paikallisen karttamittakaavan mukana. Pallomalli on havainnolliseen vertailuun tarkoitettu likiarvo.
 
 ## Rajauksen muuttaminen
 
-Muokkaa `geometry.js`-tiedoston `OULU_BOUNDARY`-koordinaatteja järjestyksessä `[leveysaste, pituusaste]`. Rajaus on käsin tehty havainnollistus, ei virallinen keskustan tai kaupunginosan raja. Keskipiste ja pinta-ala lasketaan automaattisesti.
+Käytössä on käyttäjän piirtämä 16 kärkipisteen rajaus tiedostosta `oulun_keskusta2.geojson`. Sen koordinaatit on kopioitu `geometry.js`-tiedoston `OULU_BOUNDARY`-listaan järjestyksessä `[leveysaste, pituusaste]`. GeoJSONin järjestys on `[pituusaste, leveysaste]`; viimeinen, ensimmäisen pisteen toistava sulkupiste jätetään listasta pois.
+
+Rajaus on havainnollistus, ei virallinen keskustan tai kaupunginosan raja. Keskipiste ja pinta-ala lasketaan automaattisesti. Jos muokkaat GeoJSON-tiedostoa, päivitä myös `OULU_BOUNDARY`-lista. Testi varmistaa, että sovellus ja lähdetiedosto vastaavat toisiaan. GeoJSONia ei tarvitse siirtää webhotelliin, sillä selain käyttää `geometry.js`-tiedostoa.
 
 ## Kartta ja julkaiseminen
 
@@ -33,18 +36,10 @@ Leaflet 1.9.4 ladataan unpkg-palvelusta, karttatiilet OpenStreetMapista ja fonti
 
 Sovellus toimii staattisella verkkopalvelimella. Julkaise `index.html`, `app.js`, `geometry.js` ja `styles.css` samassa hakemistossa. GitHub Pages -julkaisu onnistuu myös repon juuresta. Karttatiilien käytössä on noudatettava [OpenStreetMapin käyttöehtoja](https://operations.osmfoundation.org/policies/tiles/); suurelle liikenteelle kannattaa valita erillinen tiilipalvelu.
 
-### GitHub Actions → webhotelli FTPS:llä
+### GitHub Actions → GitHub Pages
 
-Lisää repon **Settings → Secrets and variables → Actions → New repository secret**:
+Julkaisuosoite: https://pasipasi123.github.io/oulun_keskusta/
 
-| Secret | Esimerkki / merkitys |
-| --- | --- |
-| `FTPS_HOST` | `ftp.example.fi`, pelkkä palvelinnimi |
-| `FTPS_USER` | FTP-käyttäjätunnus |
-| `FTPS_PASSWORD` | FTP-salasana |
-| `FTPS_REMOTE_DIR` | Olemassa oleva kohdehakemisto, esim. `/public_html/oulu/` |
-| `FTPS_PORT` | Valinnainen; oletus `21` |
+Repon Pages-julkaisulähde on GitHub Actions. Workflow `.github/workflows/deploy.yml` ajaa testit ja julkaisee sovelluksen jokaisella `main`-haaran pushilla. Sen voi käynnistää myös Actions-välilehden **Run workflow** -painikkeella.
 
-Workflow testaa geometrian ja JavaScriptin syntaksin ja siirtää neljä julkista tiedostoa, kun `main`-haaraan pushataan. Sen voi käynnistää myös Actions-välilehden **Run workflow** -painikkeella. Lisää secretit ennen ensimmäistä julkaisua; ilman niitä julkaisu pysähtyy selkeään virheilmoitukseen. Tunnuksia ei tule selaimen koodiin.
-
-Kohdehakemisto pitää luoda webhotellissa etukäteen. Siellä samannimiset neljä tiedostoa korvataan; muita tiedostoja ei poisteta. Käytä sovellukselle omaa hakemistoa. Toteutus käyttää eksplisiittistä FTPS:ää (AUTH TLS, yleensä portti 21), passiivista tiedonsiirtoa ja varmenteen tarkistusta. Jos webhotelli tarjoaa vain implisiittisen FTPS:n (yleensä portti 990) tai SFTP:n, siirtotapa pitää muuttaa; pelkkä portin vaihto ei riitä. Webhotellissa ei tarvita Pythonia tai Node.js:ää, sillä julkaisu ajetaan GitHubin palvelimella.
+Julkaisuun pakataan vain `index.html`, `app.js`, `geometry.js` ja `styles.css`. Erillisiä salasanoja tai FTPS-secretejä ei tarvita. Aiempi FTPS-workflow on korvattu Pages-julkaisulla. Haluttaessa tiedostot voi yhä siirtää käsin webhotelliin.

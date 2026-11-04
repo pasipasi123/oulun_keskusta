@@ -1,8 +1,23 @@
-// WGS84 coordinates [latitude, longitude]. Illustrative, NOT an official boundary.
+// User-defined outline from oulun_keskusta2.geojson, not an official boundary.
+// WGS84 coordinates [latitude, longitude]; GeoJSON uses the reverse order.
+// The closing duplicate vertex is omitted because rendering closes the ring.
 export const OULU_BOUNDARY = [
-  [65.0180, 25.4615], [65.0190, 25.4695], [65.0180, 25.4775],
-  [65.0145, 25.4860], [65.0080, 25.4880], [65.0050, 25.4780],
-  [65.0060, 25.4650], [65.0100, 25.4565], [65.0145, 25.4555],
+  [65.008027, 25.479853],
+  [65.011838, 25.485065],
+  [65.012756, 25.481471],
+  [65.013625, 25.478335],
+  [65.014673, 25.474481],
+  [65.015207, 25.472567],
+  [65.014360, 25.471284],
+  [65.015753, 25.465902],
+  [65.012965, 25.461630],
+  [65.012072, 25.465039],
+  [65.010438, 25.462727],
+  [65.009894, 25.464723],
+  [65.009127, 25.463566],
+  [65.007543, 25.469424],
+  [65.009978, 25.473020],
+  [65.008582, 25.477745],
 ];
 export const EARTH_RADIUS = 6371008.8;
 const rad = degrees => degrees * Math.PI / 180;
