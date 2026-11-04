@@ -21,6 +21,24 @@ if (!window.L) {
   const svg = document.querySelector('#outline');
   const polygon = document.querySelector('#city-polygon');
   const buttons = [...document.querySelectorAll('[data-city]')];
+  const picker = document.querySelector('.city-picker');
+  const cityToggle = document.querySelector('#city-toggle');
+  const mobileLayout = matchMedia('(max-width: 600px)');
+  function closeCityList() {
+    picker.classList.remove('is-open');
+    cityToggle.setAttribute('aria-expanded', 'false');
+  }
+  cityToggle.addEventListener('click', () => {
+    const open = picker.classList.toggle('is-open');
+    cityToggle.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('pointerdown', event => {
+    if (!picker.contains(event.target)) closeCityList();
+  });
+  picker.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { closeCityList(); cityToggle.focus(); }
+  });
+  mobileLayout.addEventListener('change', closeCityList);
   function render() {
     const center = map.getCenter(), size = map.getSize();
     svg.setAttribute('viewBox', `0 0 ${size.x} ${size.y}`);
@@ -31,10 +49,16 @@ if (!window.L) {
     const lng = ((center.lng + 180) % 360 + 360) % 360 - 180;
     document.querySelector('#coordinates').textContent = `${Math.abs(center.lat).toFixed(4)}° ${center.lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(4)}° ${lng >= 0 ? 'E' : 'W'}`;
     buttons.forEach(button => button.setAttribute('aria-pressed', String(map.distance(center, cities[button.dataset.city]) < 100)));
+    const selectedCity = buttons.find(button => button.getAttribute('aria-pressed') === 'true');
+    document.querySelector('#city-current').textContent = selectedCity?.textContent || 'Valitse kaupunki';
     document.querySelector('.polygon-label').hidden = map.getZoom() < 12;
   }
   map.on('move zoom resize', render);
-  buttons.forEach(button => button.addEventListener('click', () => map.setView(cities[button.dataset.city], 13, { animate: false })));
+  buttons.forEach(button => button.addEventListener('click', () => {
+    map.setView(cities[button.dataset.city], 13, { animate: false });
+    closeCityList();
+    if (mobileLayout.matches) cityToggle.focus();
+  }));
   new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(document.querySelector('#map'));
   render();
 }

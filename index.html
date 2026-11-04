@@ -23,6 +23,8 @@
           </header>
           <div class="city-picker" role="group" aria-label="Siirry kaupunkiin">
             <span>Vie Oulu</span>
+            <button id="city-toggle" class="city-toggle" aria-expanded="false" aria-controls="city-options"><span id="city-current">Ouluun</span><span aria-hidden="true">⌄</span></button>
+            <div id="city-options" class="city-options">
             <button data-city="oulu" aria-pressed="true">Ouluun</button>
             <button data-city="helsinki" aria-pressed="false">Helsinkiin</button>
             <button data-city="tampere" aria-pressed="false">Tampereelle</button>
@@ -30,6 +32,7 @@
             <button data-city="jyvaskyla" aria-pressed="false">Jyväskylään</button>
             <button data-city="lahti" aria-pressed="false">Lahteen</button>
             <button data-city="lappeenranta" aria-pressed="false">Lappeenrantaan</button>
+            </div>
           </div>
         </div>
         <div class="center-label" aria-hidden="true"><span class="crosshair">+</span><span class="polygon-label">OULUN KESKUSTA</span></div>

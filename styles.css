@@ -15,6 +15,8 @@ h1 { font-family: 'Manrope', sans-serif; font-size: clamp(24px, 2.6vw, 36px); fo
 .description { color: #5e6d60; font-size: 15px; line-height: 1.5; margin: 10px 0 0; }
 .city-picker { pointer-events: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; max-width: 100%; background: var(--panel); padding: 7px; border: 1px solid #e2e3da; border-radius: 10px; box-shadow: 0 3px 14px #29392d12; }
 .city-picker>span { font-size: 11px; font-weight: 700; color: #657163; padding: 0 12px; }
+.city-options { display: flex; flex-wrap: wrap; gap: 4px; }
+.city-picker .city-toggle { display: none; }
 .city-picker button { border: 0; background: transparent; color: #526052; border-radius: 6px; padding: 11px 13px; font-size: 12px; min-height: 40px; }
 .city-picker button:hover { background: #f1eee6; }
 .city-picker button[aria-pressed=true] { background: #2d4235; color: white; }
@@ -41,12 +43,20 @@ dialog p { line-height: 1.8; font-size: 14px; }
 .close-button:hover { background: #f1eee6; }
 @media(max-width:600px) {
   .map-heading { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); gap: 8px; }
-  .intro { padding: 16px 18px; width: 100%; border-radius: 12px; }
+  .intro { padding: 16px 18px; width: 100%; border-radius: 12px; background: #fffefa33; border-color: #fffefa40; box-shadow: none; text-shadow: 0 1px 3px #fffefa, 0 0 10px #fffefacc; }
   h1 { font-size: 25px; letter-spacing: -.9px; }
   .description { font-size: 13px; margin-top: 8px; }
-  .city-picker { gap: 2px; padding: 5px; border-radius: 9px; }
+  .city-picker { position: relative; gap: 2px; padding: 3px; border-radius: 9px; background: #fffefa33; border-color: #fffefa55; box-shadow: none; }
   .city-picker>span { padding: 0 8px; font-size: 10px; }
-  .city-picker button { padding: 9px 10px; font-size: 11px; }
+  .city-picker button { padding: 10px 12px; font-size: 12px; min-height: 44px; }
+  .city-picker .city-toggle { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-width: 112px; color: #25352e; font-weight: 600; text-shadow: 0 1px 3px #fffefa, 0 0 8px #fffefa; }
+  .city-toggle[aria-expanded=true]>span:last-child { transform: rotate(180deg); }
+  .city-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; width: 220px; max-width: calc(100vw - 24px); max-height: min(50dvh, 330px); overflow-y: auto; overscroll-behavior: contain; padding: 5px; background: #fffefa55; backdrop-filter: blur(3px); border: 1px solid #fffefa66; border-radius: 10px; box-shadow: 0 4px 20px #25352e15; }
+  .city-picker.is-open .city-options { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 2px; }
+  .city-options button { flex-shrink: 0; width: 100%; text-align: left; color: #25352e; text-shadow: 0 1px 3px #fffefa; }
+  .city-options button[aria-pressed=true] { background: #2d4235b8; text-shadow: none; }
+  .city-picker button:hover { background: #fffefa66; }
+  .city-options button[aria-pressed=true]:hover { background: #2d4235d9; }
   .definition-button { left: 12px; bottom: max(60px, calc(env(safe-area-inset-bottom) + 48px)); font-size: 11px; padding: 11px 12px; }
   .location { left: 12px; transform: none; bottom: max(115px, calc(env(safe-area-inset-bottom) + 103px)); font-size: 9px; }
   .leaflet-bottom.leaflet-right .leaflet-control-zoom { margin-right: 12px; margin-bottom: 30px; }
