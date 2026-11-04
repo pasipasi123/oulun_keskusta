@@ -43,15 +43,15 @@ dialog p { line-height: 1.8; font-size: 14px; }
 .close-button:hover { background: #f1eee6; }
 @media(max-width:600px) {
   .map-heading { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); gap: 8px; }
-  .intro { padding: 16px 18px; width: 100%; border-radius: 12px; background: #fffefa33; border-color: #fffefa40; box-shadow: none; text-shadow: 0 1px 3px #fffefa, 0 0 10px #fffefacc; }
+  .intro { padding: 16px 18px; width: 100%; border-radius: 12px; background: #fffefa66; border-color: #fffefa40; box-shadow: none; text-shadow: 0 1px 3px #fffefa, 0 0 10px #fffefacc; }
   h1 { font-size: 25px; letter-spacing: -.9px; }
   .description { font-size: 13px; margin-top: 8px; }
-  .city-picker { position: relative; gap: 2px; padding: 3px; border-radius: 9px; background: #fffefa33; border-color: #fffefa55; box-shadow: none; }
+  .city-picker { position: relative; gap: 2px; padding: 3px; border-radius: 9px; background: #fffefa66; border-color: #fffefa55; box-shadow: none; }
   .city-picker>span { padding: 0 8px; font-size: 10px; }
   .city-picker button { padding: 10px 12px; font-size: 12px; min-height: 44px; }
   .city-picker .city-toggle { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-width: 112px; color: #25352e; font-weight: 600; text-shadow: 0 1px 3px #fffefa, 0 0 8px #fffefa; }
   .city-toggle[aria-expanded=true]>span:last-child { transform: rotate(180deg); }
-  .city-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; width: 220px; max-width: calc(100vw - 24px); max-height: min(50dvh, 330px); overflow-y: auto; overscroll-behavior: contain; padding: 5px; background: #fffefa55; backdrop-filter: blur(3px); border: 1px solid #fffefa66; border-radius: 10px; box-shadow: 0 4px 20px #25352e15; }
+  .city-options { display: none; position: absolute; top: calc(100% + 6px); left: 0; width: 220px; max-width: calc(100vw - 24px); max-height: min(50dvh, 330px); overflow-y: auto; overscroll-behavior: contain; padding: 5px; background: #fffefa66; backdrop-filter: blur(3px); border: 1px solid #fffefa66; border-radius: 10px; box-shadow: 0 4px 20px #25352e15; }
   .city-picker.is-open .city-options { display: flex; flex-direction: column; flex-wrap: nowrap; gap: 2px; }
   .city-options button { flex-shrink: 0; width: 100%; text-align: left; color: #25352e; text-shadow: 0 1px 3px #fffefa; }
   .city-options button[aria-pressed=true] { background: #2d4235b8; text-shadow: none; }
