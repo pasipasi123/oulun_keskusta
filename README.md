@@ -1,45 +1,64 @@
-# Kokeile, mihin Oulun keskusta mahtuu
+# Oulu city centre size comparison
 
-Leaflet- ja JavaScript-sovellus, jossa Oulun keskustan likimääräinen rajaus pysyy kartan keskellä. Siirrä karttaa vertaillaksesi keskustan kokoa muualla.
+An interactive Leaflet map that lets you place an outline of Oulu city centre over other locations. The polygon stays at the centre of the screen and preserves its real-world size as you move and zoom the map.
 
-## Käynnistys
+**[Open the app](https://pasipasi123.github.io/oulun_keskusta/)**
 
-Tarvitset Node.js:n (vähintään 18). Ei npm-riippuvuuksia tai käännösvaihetta.
+The interface is in Finnish. It includes shortcuts to Oulu, Helsinki, Tampere, Turku, Jyväskylä, Lahti and Lappeenranta. On mobile, the city shortcuts collapse into a dropdown and the heading and selector use translucent backgrounds.
+
+## Local development
+
+Use Node.js 22 or newer. There are no package dependencies and no build step.
 
 ```sh
 npm start
 ```
 
-Avaa http://127.0.0.1:5173. Testit: `npm test`.
+Open http://127.0.0.1:5173. To run without npm:
 
-Vaihtoehtoisesti ilman npm:ää: `node server.js` ja `node --test`.
+```sh
+node server.js
+```
 
-## Toiminta
+The preview server binds to localhost and serves only the four public application files. Set the `PORT` environment variable to use another port.
 
-- Vedä karttaa tai käytä nuolinäppäimiä kartan ollessa kohdistettuna.
-- Zoomaa hiiren rullalla, kosketuseleellä tai plus- ja miinuspainikkeilla.
-- Kartta täyttää koko näytön. Kaupunkipainikkeet siirtävät Ouluun, Helsinkiin, Tampereelle, Turkuun, Jyväskylään, Lahteen ja Lappeenrantaan.
-- Oulun keskustan määritelmä -painike avaa rajauksen perustelut.
-- Polygonin ankkurina on alueen pinta-alan keskipiste. SVG piirretään kartan päälle ja päivitetään jokaisella siirto-, zoomaus- ja kokomuutostapahtumalla.
-- Kärkien etäisyydet ja ilmansuunnat keskipisteestä säilytetään pallogeometrian avulla. Pelkkä leveys- ja pituusasteiden siirtäminen vääristäisi kokoa eri leveysasteilla.
-- Maantieteellinen koko säilyy ja ruudulla näkyvä koko muuttuu zoomauksen sekä paikallisen karttamittakaavan mukana. Pallomalli on havainnolliseen vertailuun tarkoitettu likiarvo.
+## Tests
 
-## Rajauksen muuttaminen
+```sh
+npm test
+```
 
-Käytössä on käyttäjän piirtämä 16 kärkipisteen rajaus tiedostosta `oulun_keskusta2.geojson`. Sen koordinaatit on kopioitu `geometry.js`-tiedoston `OULU_BOUNDARY`-listaan järjestyksessä `[leveysaste, pituusaste]`. GeoJSONin järjestys on `[pituusaste, leveysaste]`; viimeinen, ensimmäisen pisteen toistava sulkupiste jätetään listasta pois.
+Or run `node --test` directly. Tests cover the GeoJSON conversion, reconstruction of the original boundary, distances and bearings after relocation, approximate area preservation and zoom scaling.
 
-Rajaus on havainnollistus, ei virallinen keskustan tai kaupunginosan raja. Keskipiste ja pinta-ala lasketaan automaattisesti. Jos muokkaat GeoJSON-tiedostoa, päivitä myös `OULU_BOUNDARY`-lista. Testi varmistaa, että sovellus ja lähdetiedosto vastaavat toisiaan. GeoJSONia ei tarvitse siirtää webhotelliin, sillä selain käyttää `geometry.js`-tiedostoa.
+## Boundary and geometry
 
-## Kartta ja julkaiseminen
+The outline is a subjective interpretation of Oulu city centre, focusing on perimeter blocks and street-level businesses. It deliberately excludes Meritulli, Vänmanninsaari, Etu-Lyötty and much of the informal Heinäpää area. It is not an official administrative boundary.
 
-Leaflet 1.9.4 ladataan unpkg-palvelusta, karttatiilet OpenStreetMapista ja fontit Google Fontsista. Sovelluksen käyttö edellyttää verkkoyhteyttä. Fontin latausvirhe käyttää järjestelmäfonttia.
+The original 16-vertex boundary is stored in `oulun_keskusta2.geojson`. Its coordinates are copied into `OULU_BOUNDARY` in `geometry.js`:
 
-Sovellus toimii staattisella verkkopalvelimella. Julkaise `index.html`, `app.js`, `geometry.js` ja `styles.css` samassa hakemistossa. GitHub Pages -julkaisu onnistuu myös repon juuresta. Karttatiilien käytössä on noudatettava [OpenStreetMapin käyttöehtoja](https://operations.osmfoundation.org/policies/tiles/); suurelle liikenteelle kannattaa valita erillinen tiilipalvelu.
+- GeoJSON uses `[longitude, latitude]`.
+- The application uses `[latitude, longitude]`.
+- The repeated closing coordinate is omitted from the application array.
 
-### GitHub Actions → GitHub Pages
+When changing the boundary, update both files. A test checks that they match. The anchor point and geometry are calculated automatically.
 
-Julkaisuosoite: https://pasipasi123.github.io/oulun_keskusta/
+Each vertex is stored as a distance and bearing from the boundary's area centroid. The app reconstructs the vertices around the current map centre using spherical geometry and draws them in a screen-fixed SVG overlay. This accounts for the latitude-dependent scale of the map projection. The spherical model is intended for visual comparison rather than surveying.
 
-Repon Pages-julkaisulähde on GitHub Actions. Workflow `.github/workflows/deploy.yml` ajaa testit ja julkaisee sovelluksen jokaisella `main`-haaran pushilla. Sen voi käynnistää myös Actions-välilehden **Run workflow** -painikkeella.
+## Deployment
 
-Julkaisuun pakataan vain `index.html`, `app.js`, `geometry.js` ja `styles.css`. Erillisiä salasanoja tai FTPS-secretejä ei tarvita. Aiempi FTPS-workflow on korvattu Pages-julkaisulla. Haluttaessa tiedostot voi yhä siirtää käsin webhotelliin.
+GitHub Pages is configured to use GitHub Actions. The workflow in `.github/workflows/deploy.yml` runs the tests and JavaScript syntax checks, then publishes every push to `main`. It can also be triggered manually from the Actions tab.
+
+Only these files are included in the published site:
+
+- `index.html` — page structure and Finnish interface text
+- `app.js` — map interaction and city selection
+- `geometry.js` — boundary coordinates and geometry calculations
+- `styles.css` — desktop and mobile styles
+
+The `_site/` directory is generated during deployment and is ignored by Git. Deployment uses GitHub's built-in authentication; no deployment secrets are required. The same four public files can also be served by any static web server, including from a subdirectory.
+
+## External resources
+
+The app loads Leaflet 1.9.4 from unpkg, map tiles from OpenStreetMap and fonts from Google Fonts. An internet connection is required; system fonts are used if the web fonts cannot load.
+
+OpenStreetMap attribution is displayed on the map. Tile usage must follow the [OpenStreetMap tile usage policy](https://operations.osmfoundation.org/policies/tiles/). For higher traffic, use a suitable tile provider.
